@@ -1,66 +1,51 @@
+import java.util.Arrays;
+import java.util.Locale;
+
 public class GradientFillShapeDecorator extends ShapeDecorator {
-    private static int gradientIndex = 0;
-    private Stop[] stops;
+    private static int index = 1;
+    private record Stop(double offset, String color) {}
 
-    public GradientFillShapeDecorator(Shape decoratedShape) {
-        super(decoratedShape);
-        stops = new Stop[10];
-    }
-
-    public void addStop(double offset, String color) {
-        for (int i = 0; i < stops.length; i++) {
-            if (stops[i] == null) {
-                stops[i] = new Stop(offset, color);
-                break;
-            }
-        }
-    }
-
-    public String toSvg() {
-
-        gradientIndex++;
-
-
-        StringBuilder gradientDef = new StringBuilder();
-        gradientDef.append(String.format("\t<linearGradient id=\"g%d\">\n", gradientIndex));
-        for (Stop stop : stops) {
-            if (stop != null) {
-                gradientDef.append(String.format("\t\t<stop offset=\"%f\" style=\"stop-color:%s\" />\n", stop.offset, stop.color));
-            }
-        }
-        gradientDef.append("\t</linearGradient>");
-
-
-        SvgScene.getInstance().addDefs(gradientDef.toString());
-        String temp =String.format(" fill=\"url(#g%d)\"/>",gradientIndex);
-       String parentSvg = super.toSvg(temp);
-        return parentSvg;
-    }
-    
-    private static class Stop {
-        double offset;
-        String color;
-
-        public Stop(double offset, String color) {
-            this.offset = offset;
-            this.color = color;
-        }
-    }
+    private Stop stops[];
 
     public static class Builder {
-        private GradientFillShapeDecorator decorator;
+        private Stop stops[] = new Stop[0];
+        private Shape shape;
 
-        public Builder(Shape shape) {
-            decorator = new GradientFillShapeDecorator(shape);
+        public GradientFillShapeDecorator.Builder setShape(Shape shape) {
+            this.shape = shape;
+            return this;
         }
 
-        public Builder addStop(double offset, String color) {
-            decorator.addStop(offset, color);
+        public GradientFillShapeDecorator.Builder addStop(double offset, String color) {
+            stops = Arrays.copyOf(stops, stops.length + 1);
+            stops[stops.length - 1] = new Stop(offset, color);
             return this;
         }
 
         public GradientFillShapeDecorator build() {
-            return decorator;
+            GradientFillShapeDecorator result = new GradientFillShapeDecorator(shape);
+            result.stops = this.stops;
+            return result;
         }
+    }
+
+    private GradientFillShapeDecorator(Shape decoratedShape) {
+        super(decoratedShape);
+    }
+
+    private int addRequiredDefToScene() {
+        SvgScene scene = SvgScene.getInstance();
+        String result = "\t<linearGradient id=\"g%d\" >\n";
+        for(var stop : stops)
+            result += String.format(Locale.ENGLISH, "\t\t<stop offset=\"%f\" style=\"stop-color:%s\" />\n", stop.offset, stop.color);
+        result += "\t</linearGradient>";
+        scene.addFilter(result);
+        return index++;
+    }
+
+    @Override
+    public String toSvg(String parameters) {
+        int index = addRequiredDefToScene();
+        return decoratedShape.toSvg(parameters + String.format("fill=\"url(#g%d)\" ", index));
     }
 }

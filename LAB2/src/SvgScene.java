@@ -15,8 +15,12 @@ public class SvgScene {
         }
         return instance;
     }
-    public void addDefs(String def){ defs.add(String.format(def,index)); index++; }
-
+    public int addFilter(String filter){
+        defs.add(
+                String.format(filter, ++index)
+        );
+        return index;
+    }
     public void addShape(Shape shape) {
         this.shapes.add(shape);
     }

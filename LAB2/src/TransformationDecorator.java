@@ -12,8 +12,7 @@ public class TransformationDecorator extends ShapeDecorator {
         private Shape shape;
         String transform;
 
-        public Builder(Shape shape) {
-            this.shape = shape;
+        public Builder() {
             this.transform = "";
         }
 
@@ -29,7 +28,7 @@ public class TransformationDecorator extends ShapeDecorator {
             transform += String.format("scale(%f %f) ",scaleVector.x,scaleVector.y);
             return this;
         }
-        public  TransformationDecorator trans(){
+        public  TransformationDecorator trans(Shape shape){
             return new TransformationDecorator(shape,transform);
         }
     }

@@ -3,17 +3,14 @@
 <body>
 <svg width="1024" height="768" xmlns="http://www.w3.org/2000/svg">
 <defs>
-	<filter id="f0" x="-100%" y="-100%" width="300%" height="300%">
+	<filter id="f1" x="-100%" y="-100%" width="300%" height="300%">
 		<feOffset result="offOut" in="SourceAlpha" dx="5" dy="5" />
 		<feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
 		<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-	</filter>	<linearGradient id="g1"''>
-</defs>
-	<polygon points='200.0,100.0 200.0,200.0 300.0,100.0 ' fill="green" stroke="blue" stroke-width="3,000000"  />
-	<ellipse cx='100.000000' cy='400.000000' rx='50.000000' ry='100.000000'  />
-	<ellipse cx='100.000000' cy='400.000000' rx='50.000000' ry='100.000000' fill="red" transform="" rotate(-25,000000 0,000000 0,000000) translate(20,000000 20,000000) scale(1,500000 1,500000)   />
-	<polygon points='200.0,100.0 200.0,200.0 300.0,100.0 '  />
-	<polygon points='200.0,100.0 200.0,200.0 300.0,100.0 '  />
+	</filter></defs>
+	<polygon points='500.0,100.0 220.0,20.0 400.0,25.0 70.0,33.0 ' fill="url(#g1)"  />
+	<ellipse cx='100.000000' cy='200.000000' rx='50.500000' ry='75.700000' fill="blue" transform="filter="url(#f1)"  " rotate(1,000000 0,000000 0,000000)   />
+	<ellipse cx='40.000000' cy='50.000000' rx='20.000000' ry='40.000000' transform="" rotate(-50,000000 0,000000 0,000000) translate(50,000000 60,000000) scale(1,000000 1,500000)  />
 </svg>
 </body>
 </html>
